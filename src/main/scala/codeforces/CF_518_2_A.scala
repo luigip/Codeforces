@@ -1,14 +1,21 @@
+// Passed online
+
 package codeforces
 
 object CF_518_2_A {
-  def solve(xs: Vector[Int]): Int = {
-  
-  ???
+  def solve(N: Long, // number of coin types
+            M: Long, // number of friends
+            K: Long, // how many types Ivan has
+            L: Long  // min number of new types
+           ): Long = {
+    val maxTypes = (N/M)*M
+    val needed = K + L
+    if (needed > maxTypes) -1 else  Utility.longCeil(needed, M)
   }
   
   def main(args: Array[String]) = {
     val io = new IO(System.in)
-    val solution = solve(???)
+    val solution = solve(io.long, io.long, io.long, io.long)
     println(solution)
   }
 
@@ -26,6 +33,13 @@ object CF_518_2_A {
       def intSeq() = collect(_.toInt)
       def doubleSeq() = collect(_.toDouble)
       def int() = sc.nextInt()
+      def long() = sc.nextLong()
       def double() = sc.nextDouble()
     }
+
+    object Utility {
+      def intCeil(a: Int, b: Int) = (a + b - 1) / b
+      def longCeil(a: Long, b: Long) = (a + b - 1) / b
+    }
+
 }

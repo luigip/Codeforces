@@ -10,9 +10,15 @@ class CF_518_2_A_Test extends FunSuite with Matchers {
     val io = new IO("""20 15 2 3
                       |""".stripMargin)
 
-    solve(io.intSeq()) shouldEqual 1
+    solve(io.long, io.long, io.long, io.long) shouldEqual 1
   }
 
+  test("2") {
+    val io = new IO("""10 11 2 4
+                      |""".stripMargin)
+
+    solve(io.long, io.long, io.long, io.long) shouldEqual -1
+  }
 
 
 }
