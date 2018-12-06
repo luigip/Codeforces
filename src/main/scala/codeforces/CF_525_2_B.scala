@@ -4,40 +4,27 @@
 package codeforces
 
 object CF_525_2_B {
-  def solve(n: Int, k: Int, arr: Array[Int]): Vector[Int] = {
-    // Going mutable for performance - blech
-    if(arr.forall(_ == 0))
-      Vector.fill(n)(0)
-    else {
-      var min = arr.filter(_ > 0).min
-      var pass = 0
-      var out = Vector.empty[Int]
-      while (pass < k) {
-        out :+= min
-        var newMin = Int.MaxValue
-        var i = 0
-        var allAreZero = true
-        while (i < arr.length) {
-          if (arr(i) > 0) {
-            arr(i) -= min
-            if (arr(i) > 0) {
-              allAreZero = false
-              if (arr(i) < newMin)
-                newMin = arr(i)
-            }
-          }
-          i += 1
-        }
-        if(allAreZero) min = 0 else min = newMin
-        pass += 1
+  type VI = Vector[Int]
+  // try sorting first then keeping tally of amount substracted
+
+
+  def solve(n: Int, k: Int, as: VI): VI = {
+    def loop(pass: Int, xs: VI, out: VI): VI = pass match {
+      case 0 => out
+      case _ => xs match {
+        case Vector() => out ++ Vector.fill(pass)(0)
+        case _ =>
+          val min = xs.min
+          val ys = for(x <- xs; if x - min > 0) yield x - min
+          loop(pass - 1, ys, out :+ min)
       }
-      out
     }
+    loop(k, as, Vector.empty)
   }
   
   def main(args: Array[String]) = {
     val io = new IO(System.in); import io._
-    val solution = solve(int, int, {nextLine; intSeq()}.toArray)
+    val solution = solve(int, int, {nextLine; intSeq()})
     solution foreach println
   }
 
