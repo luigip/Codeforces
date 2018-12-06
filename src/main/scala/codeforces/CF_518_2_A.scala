@@ -38,8 +38,8 @@ object CF_518_2_A {
     }
 
     object Utility {
-      def intCeil(a: Int, b: Int) = (a + b - 1) / b
-      def longCeil(a: Long, b: Long) = (a + b - 1) / b
+      def intCeil(a: Int, b: Int) = (a - 1) / b + 1
+      def longCeil(a: Long, b: Long) = (a - 1) / b + 1
     }
 
 }

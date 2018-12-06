@@ -1,22 +1,24 @@
-// date: ${DATE}
-// tested working online: YES / NO
+// date: 04/12/2018
+// tested working online: YES
+// (even though the initial examples are dodgy because they assume they're counting down - hence don't display all the possible answers)
+package codeforces
 
-package ${PACKAGE_NAME}
-
-object ${NAME} {
-  def solve() = {
-  
-  ???
+object CF_525_2_A {
+  def solve(x: Int):Option[(Int, Int)] = {
+    for {
+      a <- 1 to x
+      b <- 1 to a
+      if a % b == 0 && a * b > x && a / b < x
+    } return Some(a, b)
+  return None
   }
+
   
   def main(args: Array[String]) = {
     val io = new IO(System.in)
-    val solution = solve(???)
+    val solution = solve(io.int).fold("-1"){case(a,b) => s"$a $b"}
     println(solution)
   }
-
-
-
 
 
 /// boilerplate utility methods: ///
