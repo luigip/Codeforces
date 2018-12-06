@@ -3,23 +3,26 @@
 
 package codeforces
 
+import scala.collection.SortedSet
+
 object CF_525_2_B {
   type VI = Vector[Int]
   // try sorting first then keeping tally of amount substracted
 
 
   def solve(n: Int, k: Int, as: VI): VI = {
-    def loop(pass: Int, xs: VI, out: VI): VI = pass match {
+    def loop(pass: Int, xs: Seq[Int], totalSubtracted: Long, out: VI): VI = pass match {
       case 0 => out
       case _ => xs match {
         case Vector() => out ++ Vector.fill(pass)(0)
-        case _ =>
-          val min = xs.min
-          val ys = for(x <- xs; if x - min > 0) yield x - min
-          loop(pass - 1, ys, out :+ min)
+        case Vector(a, rest@_*) =>
+          val a1 = (a.toLong - totalSubtracted) max 0
+          loop(pass - 1, rest.dropWhile(_ <= a), totalSubtracted + a1, out :+ a1.toInt)
       }
     }
-    loop(k, as, Vector.empty)
+
+//    val ss = SortedSet(as)
+    loop(k, as.sorted.dropWhile(_==0), 0, Vector.empty)
   }
   
   def main(args: Array[String]) = {
