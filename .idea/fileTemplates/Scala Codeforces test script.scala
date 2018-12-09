@@ -10,7 +10,7 @@ class ${NAME} extends FunSuite with Matchers {
   test("1") {
     val i = """"""
 
-    solution(i) shouldEqual ???
+    solve(i) shouldEqual ???
   }
 
 }

@@ -1,22 +1,31 @@
-// date: ${DATE}
+// date: 09/12/2018
 // tested working online: YES / NO
 
-package ${PACKAGE_NAME}
+package codeforces
 
-object ${NAME} {
-  def solve(???): Int = {
+object CF_521_3_C {
 
-  ???
+  // The "good" number must always be the largest
+  // In the case where we're examining the max for niceness, use the second largest
+  // An element e is nice if the subtotal of the rest is 2 * the max, i.e. total - e = 2 *
+
+  def solve2(n: Int, as: Seq[Long]): (Int, Seq[Int]) = {
+    val total = as.sum
+    val max = as.max
+    val secondMax = as.diff(Seq(max)).max
+    val nices = for {
+      (e, i) <- as.zipWithIndex
+      if (e != max && total - e == 2 * max) || (e == max && total - e == 2 * secondMax)
+    } yield i + 1
+    (nices.size, nices)
   }
 
-// These formatting methods are useful to call from both main and test script
-  // Extract input values and pass to the real (!) `solve` 
-  def solve(i: Input) = solve(i.int, i.int, {i.nextLine; i.intSeq()})
-  // Take output and make it into a String we can output (main) or compare to expected (test)
-  def formatted(???): String = s"$ $"
+  // `solution` is defined by the input format - and can be called both from main and test script without repeating
+  def formatIn(i: Input) = (i.int, {i.nextLine; i.collect(_.toLong)})
+  def formatted(out: (Int, Seq[Int])) = out._1 + "\n" + out._2.mkString(" ")
 
-  
 //     ~~~ Boilerplate that doesn't change ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  def solve(i: Input) = (solve2 _).tupled(formatIn(i))
   def main(args: Array[String]) = {
     val out = new java.io.PrintWriter(System.out)
     val result = solve(new Input(System.in))
