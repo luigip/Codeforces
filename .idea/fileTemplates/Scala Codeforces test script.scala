@@ -8,9 +8,9 @@ import $m._
 class ${NAME} extends FunSuite with Matchers {
 
   test("1") {
-    val i = new Input("""""".stripMargin)
+    val i = """"""
 
-    solve(???) shouldEqual ???
+    solution(i) shouldEqual ???
   }
 
 }

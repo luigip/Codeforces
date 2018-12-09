@@ -1,19 +1,26 @@
-// date: ${DATE}
-// tested working online: YES / NO
+// date: 08/12/2018
+// tested working online: YES
 
-package ${PACKAGE_NAME}
+package codeforces
 
-object ${NAME} {
-  def solve(???): Int = {
+object CF_521_3_A {
 
-  ???
+  def solve(ss: Seq[(Int, Int, Int)]): String = {
+    val sols = for {
+      (a,b,k) <- ss
+      dist = (a - b).toLong * (k/2)
+    } yield if (k%2 == 0) dist else dist + a
+    sols.mkString("\n")
   }
 
-  // `solution` is defined by the input format - and can be called both from main and test script without repeating
-  def solution(i: Input) = solve(i.int, i.int, {i.nextLine; i.intSeq()})
+  def solution(i: Input) = {
+    val n = i.int
+    val lines = 1 to n map {_ => {i.nextLine; (i.int, i.int, i.int)}}
+    solve(lines)
+  }
 
   
-//     ~~~ Boilerplate that doesn't change ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//     ~~~ Boilerplate ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   def main(args: Array[String]) = {
     val out = new java.io.PrintWriter(System.out)
     val sol = solution(new Input(System.in))

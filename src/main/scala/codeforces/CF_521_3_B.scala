@@ -1,16 +1,21 @@
-// date: ${DATE}
+// date: 09/12/2018
 // tested working online: YES / NO
 
-package ${PACKAGE_NAME}
+package codeforces
 
-object ${NAME} {
-  def solve(???): Int = {
-
-  ???
+object CF_521_3_B {
+  def solve(n: Int, as: Seq[Int]): Int = {
+    def turnOff(as: Seq[Int], count: Int, out: Seq[Int]): (Seq[Int], Int) = as match {
+      case 1 +: 0 +: 1 +: _  => turnOff(as.updated(2,0).tail, count + 1, out :+ 1)
+      case a +: _ +: _ +: _  => turnOff(as.tail, count, out :+ a)
+      case Seq(a,b) => (out :+ a :+ b, count)
+    }
+    val result = turnOff(as, 0, Seq.empty)
+    result._2
   }
 
   // `solution` is defined by the input format - and can be called both from main and test script without repeating
-  def solution(i: Input) = solve(i.int, i.int, {i.nextLine; i.intSeq()})
+  def solution(i: Input) = solve(i.int, {i.nextLine; i.intSeq()})
 
   
 //     ~~~ Boilerplate that doesn't change ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
