@@ -9,18 +9,16 @@ object ${NAME} {
   ???
   }
 
-// These formatting methods are useful to call from both main and test script
-  // Extract input values and pass to the real (!) `solve` 
-  def solve(i: Input) = solve(i.int, i.int, {i.nextLine; i.intSeq()})
-  // Take output and make it into a String we can output (main) or compare to expected (test)
-  def formatted(???): String = s"$ $"
+  // Specify Input and Output formats here:
+  def formatIn(i: Input) = (i.int, {i.nextLine; i.collect(_.toLong)})
+  def formatOut(out: (Int, Seq[Int])) = out._1 + "\n" + out._2.mkString(" ")
 
-  
 //     ~~~ Boilerplate that doesn't change ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
   def main(args: Array[String]) = {
     val out = new java.io.PrintWriter(System.out)
-    val result = solve(new Input(System.in))
-    out.println(formatted(result))
+    val resultStr = new Input(System.in).solveStr
+    out.println(resultStr)
     out.close()
   }
 
@@ -37,6 +35,8 @@ object ${NAME} {
     def collect[T](f: String => T) = {sc.nextLine().split(" ").toVector.map(f)}
     def intSeq() = collect(_.toInt)
     def doubleSeq() = collect(_.toDouble)
+    def solveVals = (solve _).tupled(formatIn(this))
+    def solveStr = formatOut(solveVals)
   }
 
   def ceil(a: Int, b: Int) = (a - 1) / b + 1

@@ -3,25 +3,40 @@
 
 package codeforces
 
-object CF_521_3_C {
-  // The "good" number must always be the largest
-  // In the case where we're examining the max for niceness, use the second largest
-  // An element e is nice if the subtotal of the rest is 2 * the max, i.e. total - e = 2 * max
+object CF_521_3_D {
+  def solve(n: Int, k: Int, ss: Seq[Int]): Seq[Int] = {
+    val counts: Map[Int, Int] = ss.groupBy(identity).mapValues(_.size)
+    // sort biggest first so we can stop early
+    val ordered = counts.toSeq.sortWith(_._2 > _._2).toStream
+    // `trial` is the number of copies of t. Start with 1 and increase until it's not possible to build such a Seq
+    // It's possible if we can find k or more elements that have enough copies.
+    def isPossible(trial: Int, xs: Seq[(Int, Int)], found: Int, out: Seq[Int]): Option[Seq[Int]] =
+      if(found >= k) Some(out.take(k))
+      else if(xs.isEmpty) None
+      else {
+        val (e, c) = xs.head
+        // instances is the number of instances of xs.head we'll use
+        val instances = c/trial
+        if (instances < 1) None
+        else {
+          val add = Seq.fill(instances)(e)
+          isPossible(trial, xs.tail, found + instances, out ++ add)
+        }
+      }
+    def find(trial: Int, best: Seq[Int]): Seq[Int] = {
+      val poss = isPossible(trial, ordered, 0, Vector.empty)
+      poss match {
+        case None => best
+        case Some(seq) => find(trial + 1, seq)
+      }
+    }
 
-  def solve(n: Int, as: Seq[Long]): (Int, Seq[Int]) = {
-    val total = as.sum
-    val max = as.max
-    val secondMax = as.diff(Seq(max)).max
-    val nices = for {
-      (e, i) <- as.zipWithIndex
-      if (e != max && total - e == 2 * max) || (e == max && total - e == 2 * secondMax)
-    } yield i + 1
-    (nices.size, nices)
+    find(1,Seq.empty)
   }
 
   // Specify Input and Output formats here:
-  def formatIn(i: Input) = (i.int, {i.nextLine; i.collect(_.toLong)})
-  def formatOut(out: (Int, Seq[Int])) = out._1 + "\n" + out._2.mkString(" ")
+  def formatIn(i: Input) = (i.int, i.int, {i.nextLine; i.intSeq})
+  def formatOut(out: Seq[Int]) = out.mkString(" ")
 
 //     ~~~ Boilerplate that doesn't change ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
