@@ -1,38 +1,32 @@
 // date: 12/12/2018
-// tested working online: YES / NO
+// tested working online: YES
 
 package codeforces
-  import scala.util.matching.Regex
 
 object CF_526_2_C {
 
   def solve(s: String): Int = {
-//    def split(in: String, out: Seq[Seq[Long]], last: Long): Seq[Seq[Long]] = {
-//      def stringToPowers(str: String) = Seq.iterate(last, str.filter(_=='a').length)(x => (x*2) % modulo)
-//      in.indexOfSlice("aa") match {
-//        case -1 => out :+ stringToPowers(in)
-//        case i =>
-//          val (a,b) = in.splitAt(i+1)
-//          val seq = stringToPowers(a)
-//          split(b, out :+ seq, seq.last)
-//      }
-//    }
+
     val justAB = s.filter(c => c == 'a' || c == 'b').toList
+
     def answer(seq: List[Char], last: Char, lastVal: Long, total: Long): Int = seq match {
-      case Nil => assert(total < Int.MaxValue); total.toInt
+      case Nil => total.toInt
       case 'a' :: tail => last match {
         case 'b' =>
-          val n = total + 1
-          answer(tail, 'a', n, (total + n) % modulo)
-        case 'a' => answer(tail, 'a', lastVal, (total + lastVal) % modulo)
+          // If an 'a' is preceded by 'b', number of seqs stopping here is total of all previous seqs,
+          // (all can continue here) plus 1 for the one that starts and ends here
+          val thisVal = total + 1
+          answer(tail, 'a', thisVal, (total + thisVal) % modulo)
+        case 'a' =>
+          // If an 'a' is preceded by 'a', the number of seqs stopping is the same as for the previous 'a', so we
+          // add this 'a''s number to the total
+          answer(tail, 'a', lastVal, (total + lastVal) % modulo)
       }
-      case 'b' :: tail => answer(tail, 'b', lastVal, total)
+      case 'b' :: tail =>
+        // A 'b' doesn't affect the last value or total
+        answer(tail, 'b', lastVal, total)
     }
     answer(justAB, 'b', 0, 0)
-    
-
-    //    val longs = split(justAB, Vector.empty, 1)
-//    (longs.map(_.sum).sum % modulo).toInt
   }
 
   // Specify Input and Output formats here:
@@ -50,8 +44,6 @@ object CF_526_2_C {
   }
 
   import java.util.Scanner
-
-  import scala.util.matching.Regex
   class Input(sc: Scanner) {
     def this(i: java.io.InputStream) = this(new Scanner(i))
     def this(s: String) = this(new Scanner(s.stripMargin))
