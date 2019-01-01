@@ -1,21 +1,31 @@
-// date: ${DATE}
-// tested working online: YES / NO
+// date: 31/12/2018
+// tested working online: YES
 
-package ${PACKAGE_NAME}
+package codeforces
 
-object ${NAME} {
+//case class CoOrd(x: Int, y: Int)
+//object CoOrd {
+//  implicit val ord: Ordering[CoOrd] = Ordering.by(c => (c.x, c.y))
+//}
 
-  type In = (???)
-  type Out = ???
+object CF_528_2_C {
+
+  type In = Seq[(Int, Int)]
+  type Out = String
   
   def solve(in: In): Out = {
-    val () = in
+    val Seq(a, b, c) = in.sorted
+    def right(a: (Int, Int), b: Int) = (a._1 to b).map(x => (x, a._2))
+    def up(a: (Int, Int), b: Int) = if(b >= a._2) (a._2 to b).map(y => (a._1, y)) else (b to a._2).map(y => (a._1, y))
+    // Go across, then up/down, then up/down, then across
+    val squares = (right(a, b._1) ++ up((b._1, a._2), b._2) ++ up(b, c._2) ++ right((b._1, c._2), c._1)).toSet
+    squares.size.toString + "\n" + squares.map { case (a, b) => s"$a $b" }.mkString("\n")
   }
 
 //   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //   Specify Input and Output formats on RHS here:
 
-  def formatIn(i: Input): In       = (i.int, {i.nextLine; i.intSeq})
+  def formatIn(i: Input)    = i.getLines.map{_.split(" ")}.map{case Array(a,b) => (a.toInt, b.toInt)}
   def formatOut(out: Out): String  = out.toString
 
 //   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
