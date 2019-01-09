@@ -1,21 +1,31 @@
-// date: ${DATE}
-// tested working online: YES / NO
+// date: 01/01/2019
+// tested working online: YES
+package codeforces
 
-package ${PACKAGE_NAME}
+import java.util.Scanner
 
-object ${NAME} {
+object CF_528_2_D {
 
-  type In = (???)
-  type Out = ???
+  type In = (Int, Int, Scanner)
+  type Out = Double
   
   def solve(in: In): Out = {
-    val () = in
+    // Had to import Scanner for performance reasons. Other immutable solutions went over time limit.
+    val (n, s, sc) = in
+    // Divide the weights equally amongst the leaves
+    // Then return the leaf weight x 2
+    val connectCount = Array.ofDim[Int](n+1)
+    while(sc.hasNextInt) {
+      connectCount(sc.nextInt) += 1
+    }
+    val leafcount = connectCount.count(_ == 1)
+    s.toDouble / leafcount * 2
   }
 
 //   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //   Specify Input and Output formats on RHS here:
 
-  def formatIn(i: Input): In       = (i.int, {i.nextLine; i.intSeq})
+  def formatIn(i: Input): In       = (i.int, i.int, {i.nextLine; i.sc})
   def formatOut(out: Out): String  = out.toString
 
 //   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -32,7 +42,7 @@ object ${NAME} {
     out.close()
   }
   
-  class Input(sc: Scanner) {
+  class Input(val sc: Scanner) {
     // This class is useful for convenience, and for mock stdin in test scripts
     // Remember to call nextLine to advance past the newline character (if required) before taking a whole line
     def this(i: InputStream) =       this(new Scanner(i))
