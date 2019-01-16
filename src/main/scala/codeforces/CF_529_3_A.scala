@@ -1,22 +1,29 @@
-package ${PACKAGE_NAME}
+package codeforces
 
-// date: ${DATE}
+// date: 09/01/2019
 // tested working online: YES / NO
 
-object ${NAME} {
+object CF_529_3_A {
 
-  type In  = (Int, Seq[Int])
+  type In = (Int, String)
   type Out = String
   
   def solve(in: In): Out = {
-    val (n, xs) = in
-    ???
+    val (n, s) = in
+    def loop(i: Int, s1: String): String = s1 match {
+      case "" => ""
+      case _ =>
+        val (h,t) = s1.splitAt(i)
+        h.head.toString + loop(i+1, t)
+    }
+
+    loop(1, s)
   }
 
 //   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //   Specify Input and Output formats on RHS here:
 
-  def formatIn(i: Input): In       = (i.int, {i.nextLine; i.intSeq})
+  def formatIn(i: Input): In       = (i.int, {i.nextLine; i.nextLine})
   def formatOut(out: Out): String  = out.toString
 
 //   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -33,23 +40,22 @@ object ${NAME} {
     out.close()
   }
   
-  class Input(val sc: Scanner) {
+  class Input(sc: Scanner) {
     // This class is useful for convenience, and for mock stdin in test scripts
     // Remember to call nextLine to advance past the newline character (if required) before taking a whole line
-    def this(i: InputStream)       = this(new Scanner(i))
-    def this(s: String)            = this(new Scanner(s.stripMargin))
-    def int                        = sc.nextInt()
-    def long                       = sc.nextLong()
-    def double                     = sc.nextDouble()
-    def nextLine                   = sc.nextLine()
+    def this(i: InputStream) =       this(new Scanner(i))
+    def this(s: String) =            this(new Scanner(s.stripMargin))
+    def int =                        sc.nextInt()
+    def long =                       sc.nextLong()
+    def double =                     sc.nextDouble()
+    def nextLine =                   sc.nextLine()
     def collect[T](f: String => T) = sc.nextLine().split(" ").toVector.map(f)
-    def intSeq                     = collect(_.toInt)
-    def doubleSeq                  = collect(_.toDouble)
-    def getLines: Vector[String]   = if (!sc.hasNextLine) Vector.empty 
+    def intSeq =                     collect(_.toInt)
+    def doubleSeq =                  collect(_.toDouble)
+    def getLines: Vector[String] =   if (!sc.hasNextLine) Vector.empty 
                                      else sc.nextLine +: getLines
-    def getLines(lineCount: Int)   = {nextLine; (1 to lineCount).map(_ => sc.nextLine)}
-    def solveVal: Out              = (solve _).tupled(formatIn(this))
-    def solveStr: String           = formatOut(solveVal)
+    def solveVal: Out =              (solve _).tupled(formatIn(this))
+    def solveStr: String =           formatOut(solveVal)
   }
 
   // Ceiling division for Int & Long
