@@ -8,6 +8,7 @@ object CF_529_3_C {
   type In = (Int, Int)
   type Out = String
 
+  // Original submitted version
   def solve(in: In): Out = {
     val (n0, k0) = in
 
@@ -33,105 +34,57 @@ object CF_529_3_C {
     }
   }
 
-/*
-  implicit class pimpMap(m: Map[Int, Int]) {
-    def add(k: Int, v: Int) = {
-      val v0 = m(k)
-      if (v0 + v == 0)
-        m - k
-      else m + (k -> (v0 + v))
-    }
+  // ~~~~~~~~~~ Experimental versions below!! ~~~~~~~~~~~~~~~~~~
+  object GolfedVersion extends App {
+    val sc = new java.util.Scanner(System.in)
+    val n0, k0 = sc.nextInt
+
+    def loop(i: Int, n: Int, k: Int): Option[Map[Int, Int]] =
+      if (k > n || k < 1) None
+      else if (n/2 >= k)  loop(i*2, n/2, k - n%2).map(_ + (i -> n%2))
+      else                Some(Map(i*2 -> (n-k), i -> (n - (n-k)*2)))
+
+    print(loop(1, n0, k0).fold("NO")(m =>
+      "YES\n" + (for {
+        (k, v) <- m.toSeq.sorted
+        e     <- Seq.fill(v)(k)
+      } yield e).mkString(" ")
+    ))
   }
 
-  // `terms` is SortedMap ordered high -> low
-  def solve(terms0: Map[Int, Int], k: Int): Option[Map[Int, Int]] = {
-    val terms = terms0.filter(_._2 > 0)
-    val n = terms.size
-    if (k > n) None
-    else if (k == n) Some(terms)
-    //1. If n < k/2, split largest term into ones and continue
-    else if (n < k/2) {
-      val largestTerm = terms.head._1
-      val updated = terms.add(largestTerm, -1).add(1, largestTerm)
-      solve(updated, k - largestTerm + 1)
-    }
-    //2. If
-
-
-
-
-      // repeatedly look for the largest power less than size of terms
-      def findAndSplit(m: Map[Int, Int], numExtra: Int): Map[Int, Int] = numExtra match {
-        case 0 => m
-        case _ =>
-          val powers = m.filter(_._2 > 0).keys.toList.sorted(Ordering.Int.reverse)
-          val toBeSplit = powers.find(i => `2^`(i) <= numExtra && `2^`(i) > 1)
-          toBeSplit match {
-            // There is a power that can be split into 1s
-            case Some(p) =>
-              val current = m(p)
-              findAndSplit(m + (p -> (current - 1)) + (1 -> (m.getOrElse(1, 0) + current)), numExtra - (current - 1))
-            case None =>
-              val p = powers.head
-              findAndSplit(m + (p -> (m(p) - 1)) + (p -1 -> m.getOrElse(p - 1, 0)), numExtra - 1)
-
-          }
-      }
-
-      val ps = for {
-        (k, v) <- findAndSplit(terms, numExtrasRequired).toList
-        i <- Iterator.fill(v)(`2^`(k))
-      } yield i
-
-      "YES\n" + ps.mkString(" ")
-    }
-  }
-
-
-  def solve2(in: In): Out = {
+  def solve1(in: In): Out = {
     val (n0, k0) = in
 
-    val `2^` = Vector.iterate(1,31)(_*2)
+    def loop(i: Int, bs: Vector[Int], e: Int): Option[Vector[Int]] =
+      if(i == 0)
+        if(e == 0)                    Some(bs)
+        else                          None
+      else if (e < 1 || bs(i) == 0)   loop(i-1, bs, e)
+      else                            loop(i, bs.updated(i-1, bs(i-1) + 2).updated(i, bs(i)-1), e - 1)
 
-    // get powers of 2 that sum to n
-    def decompose(n: Int, i: Int): Map[Int, Int] = i match {
-      case -1                 => Map.empty
-      case _ if `2^`(i) <= n  => decompose(n - `2^`(i), i - 1) + (i -> 1)
-      case _                  => decompose(n, i - 1)
-    }
 
-    val terms = decompose(n0, 30)
-    val numExtrasRequired = k0 - terms.size
-    if(numExtrasRequired < 0 || k0 > n0) "NO"
-    else {
-      // repeatedly look for the largest power less than size of terms
-      def findAndSplit(m: Map[Int, Int], numExtra: Int): Map[Int, Int] = numExtra match {
-        case 0 => m
-        case _ =>
-          val powers = m.filter(_._2 > 0).keys.toList.sorted(Ordering.Int.reverse)
-          val toBeSplit = powers.find(i => `2^`(i) <= numExtra && `2^`(i) > 1)
-          toBeSplit match {
-              // There is a power that can be split into 1s
-            case Some(p) =>
-              val current = m(p)
-              findAndSplit(m + (p -> (current - 1)) + (1 -> (m.getOrElse(1, 0) + current)), numExtra - (current - 1))
-            case None =>
-              val p = powers.head
-              findAndSplit(m + (p -> (m(p) - 1)) + (p -1 -> m.getOrElse(p - 1, 0)), numExtra - 1)
+//      (i, e, bs(i)) match {
+//      case (0, 0, _)          => Some(bs)
+//      case (0, _, _)          => None
+//      case (_, _, _) if e < 1 => loop(i-1, bs, e)
+//      case (_, _, 0)          => loop(i-1, bs, e)
+//      case (_, _, b)          => loop(i, bs.updated(i-1, bs(i-1) + 2).updated(i, b-1), e - 1)
+//    }
 
-          }
-      }
+    val bs = BigInt(n0).toString(2).toVector.map(_.asDigit).reverse
+    val extraTermsRequired = k0 - bs.sum
 
-      val ps = for {
-        (k, v) <- findAndSplit(terms, numExtrasRequired).toList
-        i <- Iterator.fill(v)(`2^`(k))
-      } yield i
-
-      "YES\n" + ps.mkString(" ")
+    loop(bs.indices.last, bs, extraTermsRequired) match {
+      case None => "NO"
+      case Some (xs) =>
+        val seq = for {
+            (x, i) <- xs.zipWithIndex
+            if x > 0
+            e <- Seq.fill(x)(math.pow(2, i).toInt)
+          } yield e
+        "YES\n" + seq.mkString (" ")
     }
   }
-*/
-
 
 //   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //   Specify Input and Output formats on RHS here:

@@ -20,7 +20,7 @@ object ${NAME} {
   def formatOut(out: Out): String  = out.toString
 
 //   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//   Boilerplate & utility methods that don't change: 
+//   Boilerplate & utility methods that don't change (so ignore): 
 
   import java.util.Scanner
   import java.io.InputStream
@@ -53,10 +53,10 @@ object ${NAME} {
   }
 
   // Ceiling division for Int & Long
-  def ceil(a: Int, b: Int)   = (a - 1)/b + 1
-  def ceil(a: Long, b: Long) = (a - 1)/b + 1
+  def divideCeil(a: Int, b: Int)   = (a - 1)/b + 1
+  def divideCeil(a: Long, b: Long) = (a - 1)/b + 1
   
-  // A frequently used number
+  // A frequently used number in these comps
   val modulo = 1000000007
 
   // For convenience in test scripts, treat a String as an Input 
