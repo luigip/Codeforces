@@ -1,23 +1,34 @@
-package ${PACKAGE_NAME}
+package codeforces
 
-// date: ${DATE}
+// date: 16/01/2019
 // tested working online: YES / NO
 
-object ${NAME} {
+object CF_531_3_B {
 
-  type In  = (Int, Seq[Int])
-  type Out = String
+  type In  = (Int, Int, Seq[Int])
+  type Out = Option[Seq[Int]]
   
   def solve(in: In): Out = {
-    val (n, xs) = in
-    ???
+    val (_, k, as) = in
+
+    case class Elem(a: Int, index: Int, colour: Int)
+
+    val maxLen = as.groupBy(identity).maxBy(_._2.length)._2.length
+
+    val ais: Seq[Elem] = for {
+      ((a, i), c) <- (as.zipWithIndex.sorted, Stream.iterate(0)(i => (i + 1) % k)).zipped.toVector
+    } yield Elem(a, i, c + 1)
+
+    if (maxLen > k || as.length < k) None
+    else
+      Some(ais.sortBy(_.index).map(_.colour))
   }
 
 //   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //   Specify Input and Output formats on RHS here:
 
-  def formatIn(i: Input): In       = (i.int, {i.nextLine; i.intSeq})
-  def formatOut(out: Out): String  = out.toString
+  def formatIn(i: Input): In       = (i.int, i.int, {i.nextLine; i.intSeq})
+  def formatOut(out: Out): String  = out.fold("NO")(s => "YES\n" + s.mkString(" ") + "\n")
 
 //   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //   Boilerplate & utility methods that don't change (so ignore): 
@@ -53,7 +64,6 @@ object ${NAME} {
   }
 
   // Ceiling division for Int & Long
-  // `a` MUST be > 0. Incorrect otherwise.
   def divideCeil(a: Int, b: Int)   = (a - 1)/b + 1
   def divideCeil(a: Long, b: Long) = (a - 1)/b + 1
   

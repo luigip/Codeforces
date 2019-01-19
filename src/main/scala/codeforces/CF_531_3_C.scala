@@ -1,22 +1,23 @@
-package ${PACKAGE_NAME}
+package codeforces
 
-// date: ${DATE}
+// date: 16/01/2019
 // tested working online: YES / NO
 
-object ${NAME} {
+object CF_531_3_C {
 
-  type In  = (Int, Seq[Int])
-  type Out = String
+  type In  = (Int, Int, Int, Seq[Int])
+  type Out = Int
   
   def solve(in: In): Out = {
-    val (n, xs) = in
-    ???
-  }
+    val (n, break, repair, as) = in
 
+    if (break > repair) as.length
+    else math.ceil(as.count(_ <= break) / 2.0).toInt
+  }
 //   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //   Specify Input and Output formats on RHS here:
 
-  def formatIn(i: Input): In       = (i.int, {i.nextLine; i.intSeq})
+  def formatIn(i: Input): In       = (i.int, i.int, i.int, {i.nextLine; i.intSeq})
   def formatOut(out: Out): String  = out.toString
 
 //   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -53,7 +54,6 @@ object ${NAME} {
   }
 
   // Ceiling division for Int & Long
-  // `a` MUST be > 0. Incorrect otherwise.
   def divideCeil(a: Int, b: Int)   = (a - 1)/b + 1
   def divideCeil(a: Long, b: Long) = (a - 1)/b + 1
   

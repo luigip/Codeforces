@@ -1,22 +1,52 @@
-package ${PACKAGE_NAME}
+package codeforces
 
-// date: ${DATE}
-// tested working online: YES / NO
+// date: 17/01/2019
+// tested working online: YES
 
-object ${NAME} {
+object CF_531_3_D {
 
-  type In  = (Int, Seq[Int])
+  type In  = (Int, String)
   type Out = String
-  
+
   def solve(in: In): Out = {
-    val (n, xs) = in
-    ???
+  val (n, s) = in
+
+  val target = n / 3
+  val counts = List('0','1','2').map(i => (i, s.count(_ == i)))
+
+  val replacees = for {
+    (char, count) <- counts
+    if count > target
+    c <- Seq.fill(count - target)(char)
+  } yield c
+
+  val replacements = for {
+    (char, count) <- counts
+    if count < target
+    c <- Seq.fill(target - count)(char)
+  } yield c
+
+  val (startPairs, endPairs) = replacees.zip(replacements).partition(p => p._1 > p._2)
+  val startMap = startPairs.groupBy(_._1).mapValues(_.map(_._2)).withDefaultValue(Seq.empty)
+  val endMap = endPairs.groupBy(_._1).mapValues(_.map(_._2).reverse).withDefaultValue(Seq.empty)
+
+  def loop(ps: Map[Char, Seq[Char]], input: List[Char], output: List[Char]): List[Char] = input match {
+    case Nil       => output
+    case c +: tail => ps(c) match {
+      case Seq()               => loop(ps, tail, c :: output)
+      case replacement +: rest => loop(ps + (c -> rest), tail, replacement :: output)
+    }
+  }
+
+    val fromStart = loop(startMap, s.toList, Nil)
+    val fromEnd = loop(endMap, fromStart, Nil)
+    fromEnd.mkString
   }
 
 //   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //   Specify Input and Output formats on RHS here:
 
-  def formatIn(i: Input): In       = (i.int, {i.nextLine; i.intSeq})
+  def formatIn(i: Input): In       = (i.int, {i.nextLine; i.nextLine})
   def formatOut(out: Out): String  = out.toString
 
 //   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -53,7 +83,6 @@ object ${NAME} {
   }
 
   // Ceiling division for Int & Long
-  // `a` MUST be > 0. Incorrect otherwise.
   def divideCeil(a: Int, b: Int)   = (a - 1)/b + 1
   def divideCeil(a: Long, b: Long) = (a - 1)/b + 1
   
