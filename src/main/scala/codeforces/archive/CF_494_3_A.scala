@@ -1,14 +1,13 @@
-package ${PACKAGE_NAME}
+package codeforces.archive
 
-object ${NAME} {  
-// date: ${DATE}
+object CF_494_3_A {
 
   type In  = (Int, Seq[Int])
-  type Out = String
-  
+  type Out = Int
+
   def solve(in: In): Out = {
     val (n, xs) = in
-    ???
+    xs.groupBy(identity).maxBy{case (y, ys) => ys.length}._2.length
   }
 
 //   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -18,19 +17,19 @@ object ${NAME} {
   def formatOut(out: Out): String  = out.toString
 
 //   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//   Boilerplate & utility methods that don't change (so ignore): 
+//   Boilerplate & utility methods that don't change (so ignore):
 
   import java.util.Scanner
   import java.io.InputStream
   import language.implicitConversions
- 
+
   def main(args: Array[String]): Unit = {
     val out = new java.io.PrintWriter(System.out)
     val resultStr = new Input(System.in).solveStr
     out.println(resultStr)
     out.close()
   }
-  
+
   class Input(val sc: Scanner) {
     // This class is useful for convenience, and for mock stdin in test scripts
     // Remember to call nextLine to advance past the newline character (if required) before taking a whole line
@@ -43,7 +42,7 @@ object ${NAME} {
     def collect[T](f: String => T) = sc.nextLine().split(" ").toVector.map(f)
     def intSeq                     = collect(_.toInt)
     def doubleSeq                  = collect(_.toDouble)
-    def getLines: Vector[String]   = if (!sc.hasNextLine) Vector.empty 
+    def getLines: Vector[String]   = if (!sc.hasNextLine) Vector.empty
                                      else sc.nextLine +: getLines
     def getLines(lineCount: Int)   = {nextLine; (1 to lineCount).map(_ => sc.nextLine)}
     def solveVal: Out              = (solve _).tupled(formatIn(this))
@@ -54,14 +53,14 @@ object ${NAME} {
   // `a` MUST be > 0. Incorrect otherwise.
   def divideCeil(a: Int, b: Int)   = (a - 1)/b + 1
   def divideCeil(a: Long, b: Long) = (a - 1)/b + 1
-  
+
   // A frequently used number in these comps
   val modulo = 1000000007
 
-  // For convenience in test scripts, treat a String as an Input 
+  // For convenience in test scripts, treat a String as an Input
   implicit def stringToInput(s: String): Input = new Input(s)
   // Required to make `solveVal` work when input has just 1 value (i.e. not a Tuple)
-  implicit class makeTupledWorkOnFunction1[-T,+R](f: T => R) { 
-    def tupled: T => R = x => f(x) 
+  implicit class makeTupledWorkOnFunction1[-T,+R](f: T => R) {
+    def tupled: T => R = x => f(x)
   }
 }
